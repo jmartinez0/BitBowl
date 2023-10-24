@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "edu.farmingdale.bcs421_termproject"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "edu.farmingdale.bcs421_termproject"
