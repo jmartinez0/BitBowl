@@ -93,40 +93,11 @@
         android:padding="10dp"
         android:textColor="#252525"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/confirmPasswordTextView"
-        app:layout_constraintEnd_toEndOf="@id/guideline5"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@id/guideline4"
-        app:layout_constraintTop_toBottomOf="@+id/passwordTextView" />
-
-    <TextView
-        android:id="@+id/confirmPasswordTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Confirm Password"
-        android:textColor="#000000"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/confirmPasswordEditText"
-        app:layout_constraintEnd_toEndOf="@id/guideline5"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@id/guideline4"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
-
-    <EditText
-        android:id="@+id/confirmPasswordEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_edittext"
-        android:hint="Retype Password"
-        android:inputType="textPassword"
-        android:padding="10dp"
-        android:textColor="#252525"
-        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/signUpButton"
         app:layout_constraintEnd_toEndOf="@id/guideline5"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/guideline4"
-        app:layout_constraintTop_toBottomOf="@+id/confirmPasswordTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordTextView" />
 
     <Button
         android:id="@+id/signUpButton"
@@ -141,7 +112,7 @@
         app:layout_constraintEnd_toEndOf="@id/guideline5"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/guideline4"
-        app:layout_constraintTop_toBottomOf="@+id/confirmPasswordEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEditText" />
 
     <TextView
         android:id="@+id/orTextView"
