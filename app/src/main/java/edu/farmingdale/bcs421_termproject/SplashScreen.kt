@@ -17,7 +17,7 @@ class SplashScreen : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
 
-        // Wait 2 seconds before switching from Splash Screen to Login Screen
+        // Wait 2 seconds before switching from Splash Screen to Login Activity
         Handler().postDelayed({
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)

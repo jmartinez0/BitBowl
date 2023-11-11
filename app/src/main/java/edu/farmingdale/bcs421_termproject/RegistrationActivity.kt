@@ -6,13 +6,27 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.EditText
 
 class RegistrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.registration_activity)
 
+        val loginButton = findViewById<Button>(R.id.logInButton)
+        val signUpButton = findViewById<Button>(R.id.signUpButton)
+        val emailEditText = findViewById<EditText>(R.id.emailEditText)
+        val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
 
+        // Move to registration activity
+        loginButton.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
 
+        signUpButton.setOnClickListener {
+            // Code to verify entered details are valid
+            // Details probably provided in Firebase documentation
+            // Email format, unique email, password length, etc.
+        }
     }
 }
