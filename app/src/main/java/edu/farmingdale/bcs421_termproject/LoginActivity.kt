@@ -1,17 +1,22 @@
 package edu.farmingdale.bcs421_termproject
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.view.WindowManager
-import android.widget.Button
-import android.widget.EditText
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.*
+import com.google.android.gms.common.api.*
+import com.google.firebase.auth.*
 
 class LoginActivity : AppCompatActivity() {
+    private lateinit var firebaseAuth: FirebaseAuth
+    companion object {
+        private const val RC_SIGN_IN = 9001
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
+        firebaseAuth = FirebaseAuth.getInstance()
 
         val loginButton = findViewById<Button>(R.id.logInButton)
         val signUpButton = findViewById<Button>(R.id.signUpButton)
@@ -20,17 +25,60 @@ class LoginActivity : AppCompatActivity() {
         val passwordEditText = findViewById<EditText>(R.id.passwordEditText)
 
         loginButton.setOnClickListener {
-            // Code to verify log in information then move to dashboard
+            val email = emailEditText.text.toString()
+            val pass = passwordEditText.text.toString()
+
+            if (email.isNotEmpty() && pass.isNotEmpty()) {
+                firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        val intent = Intent(this, Dashboard::class.java)
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Empty Fields Are not Allowed !!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         // Move to registration activity
         signUpButton.setOnClickListener {
             startActivity(Intent(this, RegistrationActivity::class.java))
         }
-
         googleButton.setOnClickListener {
-            // Code to continue with a Google account
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail().build()
+            val client = GoogleSignIn.getClient(this,gso)
+            val sIntent = client.signInIntent
+            startActivityForResult(sIntent, RC_SIGN_IN)
         }
     }
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                //Current Google Sign In error
+                val account = task.getResult(ApiException::class.java)
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                Toast.makeText(this, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                val user = firebaseAuth.currentUser
+                Toast.makeText(this, "Signed in as ${user?.displayName}", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, Dashboard::class.java))
+                finish()
+            } else {
+                Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }

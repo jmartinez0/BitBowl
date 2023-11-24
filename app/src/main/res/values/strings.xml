@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">BCS421_TermProject</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="default_web_client_id" translatable="false">244256626320-0g7e10qqevjaiun5ac0i1q3uibn9qli3.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">244256626320</string>
+    <string name="google_api_key" translatable="false">AIzaSyBkyO8KQgxsrqlyz-VvFicHjoHmTZ38S1k</string>
+    <string name="google_app_id" translatable="false">1:244256626320:android:d7add8e97e87201cc06a15</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBkyO8KQgxsrqlyz-VvFicHjoHmTZ38S1k</string>
+    <string name="google_storage_bucket" translatable="false">auth-ml-api-demo.appspot.com</string>
+    <string name="project_id" translatable="false">auth-ml-api-demo</string>
 </resources>
