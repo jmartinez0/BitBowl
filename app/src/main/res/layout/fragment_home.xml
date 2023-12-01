@@ -15,10 +15,10 @@
         app:layout_constraintTop_toBottomOf="@id/guideline10" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/card"
+        android:id="@+id/calorieCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="@id/guideline9"
         app:layout_constraintStart_toStartOf="@id/guideline8"
         app:layout_constraintTop_toBottomOf="@id/nameTV"
@@ -36,7 +36,137 @@
                 android:text="Calories"
                 android:textSize="25sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:layout_marginLeft="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/caloriesProgress"
+                style="@style/CircularProgressBar"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:indeterminateOnly="false"
+                android:progress="50"
+                android:progressDrawable="@drawable/progress_circle"
+                android:rotation="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/caloriesTV" />
+
+            <TextView
+                android:id="@+id/caloriesProgressTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0\nremaining"
+                android:textAlignment="center"
+                android:textSize="17sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintBottom_toBottomOf="@+id/caloriesProgress"
+                app:layout_constraintEnd_toEndOf="@+id/caloriesProgress"
+                app:layout_constraintStart_toStartOf="@+id/caloriesProgress"
+                app:layout_constraintTop_toTopOf="@+id/caloriesProgress" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/macrosCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline9"
+        app:layout_constraintStart_toStartOf="@id/guideline8"
+        app:layout_constraintTop_toBottomOf="@id/calorieCard"
+        android:backgroundTint="@color/light_gray"
+        app:cardCornerRadius="10dp" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/macrosTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Macros"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/proteinProgress"
+                style="@style/CircularProgressBar"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:indeterminateOnly="false"
+                android:progress="75"
+                android:progressDrawable="@drawable/progress_circle"
+                android:rotation="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/macrosTV" />
+
+            <TextView
+                android:id="@+id/proteinProgressTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0\nremaining"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/proteinProgress"
+                app:layout_constraintEnd_toEndOf="@+id/proteinProgress"
+                app:layout_constraintStart_toStartOf="@+id/proteinProgress"
+                app:layout_constraintTop_toTopOf="@+id/proteinProgress" />
+
+            <ProgressBar
+                android:id="@+id/carbsProgress"
+                style="@style/CircularProgressBar"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:indeterminateOnly="false"
+                android:progress="25"
+                android:progressDrawable="@drawable/progress_circle"
+                android:rotation="0"
+                app:layout_constraintStart_toEndOf="@id/proteinProgress"
+                app:layout_constraintTop_toBottomOf="@id/macrosTV" />
+
+            <TextView
+                android:id="@+id/carbsProgressTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0\nremaining"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/carbsProgress"
+                app:layout_constraintEnd_toEndOf="@+id/carbsProgress"
+                app:layout_constraintStart_toStartOf="@+id/carbsProgress"
+                app:layout_constraintTop_toTopOf="@+id/carbsProgress" />
+
+            <ProgressBar
+                android:id="@+id/fatProgress"
+                style="@style/CircularProgressBar"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:indeterminateOnly="false"
+                android:progress="100"
+                android:progressDrawable="@drawable/progress_circle"
+                android:rotation="0"
+                app:layout_constraintStart_toEndOf="@id/carbsProgress"
+                app:layout_constraintTop_toBottomOf="@id/macrosTV" />
+
+            <TextView
+                android:id="@+id/fatProgressTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0\nremaining"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/fatProgress"
+                app:layout_constraintEnd_toEndOf="@+id/fatProgress"
+                app:layout_constraintStart_toStartOf="@+id/fatProgress"
+                app:layout_constraintTop_toTopOf="@+id/fatProgress" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -64,5 +194,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.03" />
+        app:layout_constraintGuide_percent="0.02" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,4 +10,8 @@
     </style>
 
     <style name="Theme.BCS421_TermProject" parent="Base.Theme.BCS421_TermProject" />
+    <style name="CircularProgressBar">
+        <item name="android:indeterminateOnly">false </item>
+        <item name="android:progressDrawable">@drawable/progress_circle</item>
+    </style>
 </resources>
