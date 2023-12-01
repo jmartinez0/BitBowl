@@ -2,16 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@drawable/icon_home"
         android:title="Home" />
     <item
+        android:id="@+id/food"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@drawable/icon_food"
         android:title="Add Food" />
     <item
+        android:id="@+id/account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:icon="@drawable/icon_account"
