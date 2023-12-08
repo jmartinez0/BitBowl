@@ -8,7 +8,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.widget.*
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 
 class RegistrationActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -16,7 +19,7 @@ class RegistrationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.registration_activity)
         auth = FirebaseAuth.getInstance()
-
+        val db = FirebaseFirestore.getInstance()
         // Programatically adjust status bar color since we use multiple colors throughout the app
         if (Build.VERSION.SDK_INT >= 21) {
             val window = this.window
@@ -47,7 +50,21 @@ class RegistrationActivity : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithEmail:success")
                         val user = auth.currentUser
-                        startActivity(Intent(this, Dashboard::class.java))
+
+                        // Setting up the new user's data fields in their unique document
+                        val data = hashMapOf(
+                            "email" to email,
+                            "height" to null,
+                            "weight" to null,
+                            "age" to null
+                        )
+
+                        // Create a new user document with their unique email address as the name of the document
+                        db.collection("Users").document(email)
+                            .set(data)
+                            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                        startActivity(Intent(this, DashboardActivity::class.java))
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.exception)
