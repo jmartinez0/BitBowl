@@ -36,7 +36,6 @@ class DashboardActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.home -> {
                     supportFragmentManager.beginTransaction().apply {
-                        setCustomAnimations(R.anim.slide_in, R.anim.slide_out)
                         replace(R.id.frameLayout, homeFragment)
                         commit()
                     }
