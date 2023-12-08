@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray" >
+
+    <TextView
+        android:id="@+id/accountTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Account"
+        app:layout_constraintStart_toStartOf="@id/guideline8"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        app:layout_constraintTop_toBottomOf="@id/guideline10" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/settingsCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline9"
+        app:layout_constraintStart_toStartOf="@id/guideline8"
+        app:layout_constraintTop_toBottomOf="@id/accountTV"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="10dp" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/infoButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Personal Information"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/white"
+                android:drawableRight="@drawable/icon_arrow"
+                android:drawableLeft="@drawable/icon_account_info"
+                android:textAlignment="textStart"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dark_gray"
+                app:layout_constraintTop_toBottomOf="@id/infoButton"/>
+
+            <Button
+                android:id="@+id/measurementsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Body Measurements"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/white"
+                android:drawableRight="@drawable/icon_arrow"
+                android:drawableLeft="@drawable/icon_measurements"
+                android:textAlignment="textStart"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/infoButton" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dark_gray"
+                app:layout_constraintTop_toBottomOf="@id/measurementsButton"/>
+
+            <Button
+                android:id="@+id/nutritionButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nutrition"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/white"
+                android:drawableRight="@drawable/icon_arrow"
+                android:drawableLeft="@drawable/icon_nutrition"
+                android:textAlignment="textStart"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/measurementsButton" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dark_gray"
+                app:layout_constraintTop_toBottomOf="@id/nutritionButton"/>
+
+            <Button
+                android:id="@+id/goalsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Goals"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/white"
+                android:drawableRight="@drawable/icon_arrow"
+                android:drawableLeft="@drawable/icon_goals"
+                android:textAlignment="textStart"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nutritionButton" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dark_gray"
+                app:layout_constraintTop_toBottomOf="@id/goalsButton"/>
+
+            <Button
+                android:id="@+id/progressButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Progress"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/white"
+                android:drawableRight="@drawable/icon_arrow"
+                android:drawableLeft="@drawable/icon_progress"
+                android:textAlignment="textStart"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/goalsButton" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dark_gray"
+                app:layout_constraintTop_toBottomOf="@id/progressButton"/>
+
+            <Button
+                android:id="@+id/recipesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Recipes"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/white"
+                android:drawableRight="@drawable/icon_arrow"
+                android:drawableLeft="@drawable/icon_recipes"
+                android:textAlignment="textStart"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/progressButton" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dark_gray"
+                app:layout_constraintTop_toBottomOf="@id/recipesButton"/>
+
+            <Button
+                android:id="@+id/friendsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Friends"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/white"
+                android:drawableRight="@drawable/icon_arrow"
+                android:drawableLeft="@drawable/icon_friends"
+                android:textAlignment="textStart"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recipesButton" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dark_gray"
+                app:layout_constraintTop_toBottomOf="@id/friendsButton"/>
+
+            <Button
+                android:id="@+id/syncButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sync With Health Connect"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/white"
+                android:drawableRight="@drawable/icon_arrow"
+                android:drawableLeft="@drawable/icon_google"
+                android:textAlignment="textStart"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/friendsButton" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/dark_gray"
+                app:layout_constraintTop_toBottomOf="@id/syncButton"/>
+
+            <Button
+                android:id="@+id/logOutButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Log Out"
+                android:textSize="20sp"
+                android:textColor="@color/red"
+                android:backgroundTint="@color/white"
+                android:drawableRight="@drawable/icon_arrow"
+                android:drawableLeft="@drawable/icon_logout"
+                android:textAlignment="textStart"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/syncButton" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.02" />
+</androidx.constraintlayout.widget.ConstraintLayout>

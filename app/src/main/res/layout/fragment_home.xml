@@ -1,23 +1,507 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment" >
+    android:background="@color/light_gray">
 
     <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
+        android:id="@+id/nameTV"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:text="Summary"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/guideline8"
+        app:layout_constraintTop_toBottomOf="@id/guideline10" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/calorieCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline9"
+        app:layout_constraintStart_toStartOf="@id/guideline8"
+        app:layout_constraintTop_toBottomOf="@id/nameTV">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/caloriesTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Calories"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/caloriesProgress"
+                style="@style/CircularProgressBar"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:indeterminateOnly="false"
+                android:progress="50"
+                android:progressDrawable="@drawable/progress_circle"
+                android:rotation="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/caloriesTV" />
+
+            <TextView
+                android:id="@+id/caloriesProgressTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0\nremaining"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="@+id/caloriesProgress"
+                app:layout_constraintEnd_toEndOf="@+id/caloriesProgress"
+                app:layout_constraintStart_toStartOf="@+id/caloriesProgress"
+                app:layout_constraintTop_toTopOf="@+id/caloriesProgress" />
+
+            <ImageView
+                android:id="@+id/goalIcon"
+                android:layout_width="32dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="5dp"
+                android:padding="0dp"
+                android:src="@drawable/icon_goals"
+                app:layout_constraintStart_toEndOf="@id/caloriesProgress"
+                app:layout_constraintTop_toBottomOf="@id/guideline14" />
+
+            <TextView
+                android:id="@+id/calorieGoalTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="Goal"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/goalIcon"
+                app:layout_constraintTop_toTopOf="@id/goalIcon" />
+
+            <TextView
+                android:id="@+id/calorieGoalAmountTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@id/calorieGoalTV"
+                app:layout_constraintTop_toBottomOf="@id/calorieGoalTV" />
+
+            <ImageView
+                android:id="@+id/foodIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:padding="0dp"
+                android:src="@drawable/icon_nutrition"
+                app:layout_constraintStart_toEndOf="@id/caloriesProgress"
+                app:layout_constraintTop_toBottomOf="@id/goalIcon" />
+
+            <TextView
+                android:id="@+id/foodTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="Food"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/foodIcon"
+                app:layout_constraintTop_toTopOf="@id/foodIcon" />
+
+            <TextView
+                android:id="@+id/foodAmountTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@id/foodTV"
+                app:layout_constraintTop_toBottomOf="@id/foodTV" />
+
+            <ImageView
+                android:id="@+id/exerciseIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:padding="0dp"
+                android:src="@drawable/icon_fire"
+                app:layout_constraintStart_toEndOf="@id/caloriesProgress"
+                app:layout_constraintTop_toBottomOf="@id/foodIcon" />
+
+            <TextView
+                android:id="@+id/exerciseInCaloriesTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="Exercise"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/exerciseIcon"
+                app:layout_constraintTop_toTopOf="@id/exerciseIcon" />
+
+            <TextView
+                android:id="@+id/exerciseAmountTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@id/exerciseInCaloriesTV"
+                app:layout_constraintTop_toBottomOf="@id/exerciseInCaloriesTV" />
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.60" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.26" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.91" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/macrosCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline9"
+        app:layout_constraintStart_toStartOf="@id/guideline8"
+        app:layout_constraintTop_toBottomOf="@id/calorieCard">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:id="@+id/macrosTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Macros"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/proteinProgress"
+                style="@style/CircularProgressBar"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:indeterminateOnly="false"
+                android:progress="50"
+                android:progressDrawable="@drawable/progress_circle"
+                android:rotation="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/macrosTV" />
+
+            <TextView
+                android:id="@+id/proteinProgressTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0\nremaining"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/proteinProgress"
+                app:layout_constraintEnd_toEndOf="@+id/proteinProgress"
+                app:layout_constraintStart_toStartOf="@+id/proteinProgress"
+                app:layout_constraintTop_toTopOf="@+id/proteinProgress" />
+
+            <TextView
+                android:id="@+id/proteinTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Protein"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@id/proteinProgress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/proteinProgress" />
+
+            <ProgressBar
+                android:id="@+id/carbsProgress"
+                style="@style/CircularProgressBar"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:indeterminateOnly="false"
+                android:progress="50"
+                android:progressDrawable="@drawable/progress_circle"
+                android:rotation="0"
+                app:layout_constraintStart_toEndOf="@id/proteinProgress"
+                app:layout_constraintTop_toBottomOf="@id/macrosTV" />
+
+            <TextView
+                android:id="@+id/carbsProgressTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0\nremaining"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/carbsProgress"
+                app:layout_constraintEnd_toEndOf="@+id/carbsProgress"
+                app:layout_constraintStart_toStartOf="@+id/carbsProgress"
+                app:layout_constraintTop_toTopOf="@+id/carbsProgress" />
+
+            <TextView
+                android:id="@+id/carbsTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Carbohydrates"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@id/carbsProgress"
+                app:layout_constraintStart_toStartOf="@id/carbsProgress"
+                app:layout_constraintTop_toBottomOf="@id/carbsProgress" />
+
+            <ProgressBar
+                android:id="@+id/fatProgress"
+                style="@style/CircularProgressBar"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:indeterminateOnly="false"
+                android:progress="50"
+                android:progressDrawable="@drawable/progress_circle"
+                android:rotation="0"
+                app:layout_constraintStart_toEndOf="@id/carbsProgress"
+                app:layout_constraintTop_toBottomOf="@id/macrosTV" />
+
+            <TextView
+                android:id="@+id/fatProgressTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0\nremaining"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/fatProgress"
+                app:layout_constraintEnd_toEndOf="@+id/fatProgress"
+                app:layout_constraintStart_toStartOf="@+id/fatProgress"
+                app:layout_constraintTop_toTopOf="@+id/fatProgress" />
+
+            <TextView
+                android:id="@+id/fatTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fat"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@id/fatProgress"
+                app:layout_constraintStart_toStartOf="@id/fatProgress"
+                app:layout_constraintTop_toBottomOf="@id/fatProgress" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/stepsCard"
+        android:layout_width="0dp"
+        android:layout_height="98dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline11"
+        app:layout_constraintStart_toStartOf="@id/guideline8"
+        app:layout_constraintTop_toBottomOf="@id/macrosCard">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/stepsTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Steps"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/shoeIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/icon_shoe"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stepsTV" />
+
+            <TextView
+                android:id="@+id/stepsAmountTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="6dp"
+                android:text="0/0 steps"
+                android:textSize="15sp"
+                app:layout_constraintStart_toEndOf="@id/shoeIcon"
+                app:layout_constraintTop_toBottomOf="@id/stepsTV" />
+
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:indeterminate="false"
+                android:padding="10dp"
+                android:progress="50"
+                app:indicatorColor="@color/bb_blue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stepsAmountTV"
+                app:trackColor="#DDD"
+                app:trackCornerRadius="20dp"
+                app:trackThickness="9dp" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/exerciseCard"
+        android:layout_width="0dp"
+        android:layout_height="98dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline9"
+        app:layout_constraintStart_toStartOf="@id/guideline11"
+        app:layout_constraintTop_toBottomOf="@id/macrosCard">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/exerciseTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Exercise"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/fireIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/icon_fire"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/exerciseTV" />
+
+            <TextView
+                android:id="@+id/caloriesBurnedTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="6dp"
+                android:text="0 cal"
+                android:textSize="15sp"
+                app:layout_constraintStart_toEndOf="@id/fireIcon"
+                app:layout_constraintTop_toBottomOf="@id/exerciseTV" />
+
+            <ImageView
+                android:id="@+id/timeIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/icon_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fireIcon" />
+
+            <TextView
+                android:id="@+id/exerciseTimeTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="10dp"
+                android:text="00:00 hr"
+                android:textSize="15sp"
+                app:layout_constraintStart_toEndOf="@id/fireIcon"
+                app:layout_constraintTop_toBottomOf="@id/fireIcon" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.02" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.50" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.69" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

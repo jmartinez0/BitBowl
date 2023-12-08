@@ -1,7 +1,9 @@
 package edu.farmingdale.bcs421_termproject
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.*
@@ -18,6 +20,14 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.login_activity)
         firebaseAuth = FirebaseAuth.getInstance()
 
+        // Programatically adjust status bar color since we use multiple colors throughout the app
+        if (Build.VERSION.SDK_INT >= 21) {
+            val window = this.window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.statusBarColor = this.resources.getColor(R.color.bb_blue)
+        }
+
         val loginButton = findViewById<Button>(R.id.logInButton)
         val signUpButton = findViewById<Button>(R.id.signUpButton)
         val googleButton = findViewById<Button>(R.id.googleButton)
@@ -31,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
             if (email.isNotEmpty() && pass.isNotEmpty()) {
                 firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        val intent = Intent(this, Dashboard::class.java)
+                        val intent = Intent(this, DashboardActivity::class.java)
                         startActivity(intent)
                     } else {
                         Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
@@ -75,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 val user = firebaseAuth.currentUser
                 Toast.makeText(this, "Signed in as ${user?.displayName}", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, Dashboard::class.java))
+                startActivity(Intent(this, DashboardActivity::class.java))
                 finish()
             } else {
                 Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show()
