@@ -7,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Spinner
 import edu.farmingdale.bcs421_termproject.databinding.FragmentAccountBinding
 import edu.farmingdale.bcs421_termproject.databinding.FragmentPersonalInformationBinding
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 private lateinit var binding: FragmentPersonalInformationBinding
 class PersonalInformationFragment : Fragment(R.layout.fragment_personal_information) {
 
@@ -22,7 +21,14 @@ class PersonalInformationFragment : Fragment(R.layout.fragment_personal_informat
     ): View? {
         binding = FragmentPersonalInformationBinding.inflate(layoutInflater, container, false)
         var view : View = binding.root
-
+        val accountFragment = AccountFragment()
+        val backButton = view.findViewById<ImageView>(R.id.backButton)
+        backButton.setOnClickListener {
+            parentFragmentManager.beginTransaction().apply {
+                replace(R.id.frameLayout, accountFragment)
+                commit()
+            }
+        }
         val dobEditText = view.findViewById<EditText>(R.id.dobET)
 
         // Drop down menu for selecting male/female
@@ -39,6 +45,11 @@ class PersonalInformationFragment : Fragment(R.layout.fragment_personal_informat
         // Code to pull date of birth data from Firestore and update dobEditText
         // Code to pull sex data from Firestore and update sexDropDownMenu
 
+        val editDob = view.findViewById<ImageView>(R.id.editDOB)
+        val editSex = view.findViewById<ImageView>(R.id.editSex)
+        // Click listeners for editDob and editSex. Initially, the fields should not be editable.
+        // Then, once we press the button we can edit the DOB and sex. This is still a WIP.
+        // Code to confirm changes and update Firestore.
         return view
     }
 
