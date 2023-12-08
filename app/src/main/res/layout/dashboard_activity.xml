@@ -27,6 +27,7 @@
         app:menu="@menu/bottom_navigation"
         app:itemTextColor="@drawable/icon_selector"
         app:itemIconTint="@drawable/icon_selector"
+        app:itemActiveIndicatorStyle="@style/Custom.Indicator"
         android:background="@color/bb_blue">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
