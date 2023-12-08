@@ -17,7 +17,7 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAccountBinding.inflate(layoutInflater, container, false)
-        var view:View = binding.root
+        var view :View = binding.root
 
         val personalInfoButton = view.findViewById<Button>(R.id.infoButton)
         val bodyMeasurementsButton = view.findViewById<Button>(R.id.measurementsButton)
