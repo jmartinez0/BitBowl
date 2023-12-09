@@ -1,12 +1,19 @@
 package edu.farmingdale.bcs421_termproject
 
 import android.content.Intent
+import android.Manifest
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.google.firebase.auth.FirebaseAuth
 import edu.farmingdale.bcs421_termproject.databinding.FragmentAccountBinding
@@ -89,10 +96,28 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
             }
         }
 
+
         syncButton.setOnClickListener {
-            parentFragmentManager.beginTransaction().apply {
-                replace(R.id.frameLayout, syncFragment)
-                commit()
+            val packageName = "edu.farmingdale.bcs421_termproject"
+
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            intent.data = Uri.parse("package:$packageName")
+
+            if (intent.resolveActivity(requireActivity().packageManager) != null) {
+                // Check if the required permissions are granted
+                if (arePermissionsGranted()) {
+                    // Permissions are granted, navigate to SyncFragment
+                    parentFragmentManager.beginTransaction().apply {
+                        replace(R.id.frameLayout, syncFragment)
+                        commit()
+                    }
+                } else {
+                    // Permissions are not granted, open app settings
+                    startActivity(intent)
+                }
+            } else {
+                // Handle the case where there's no activity to handle the intent
+                // You can show a toast or a message to inform the user
             }
         }
 
@@ -103,4 +128,36 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         return view
     }
 
+    companion object {
+        // Define a constant for your permission request code
+        private const val PERMISSION_REQUEST_CODE = 1001
+    }
+    private fun arePermissionsGranted(): Boolean {
+        val requiredPermissions = arrayOf(
+            "android.permission.health.READ_HEART_RATE",
+            "android.permission.health.WRITE_HEART_RATE",
+            "android.permission.health.READ_EXERCISE",
+            "android.permission.health.WRITE_EXERCISE",
+            "android.permission.health.READ_TOTAL_CALORIES_BURNED",
+            "android.permission.health.WRITE_TOTAL_CALORIES_BURNED",
+            "android.permission.health.READ_WEIGHT",
+            "android.permission.health.WRITE_WEIGHT",
+            "android.permission.health.READ_BASAL_METABOLIC_RATE",
+            "android.permission.health.WRITE_HEIGHT",
+            "android.permission.health.READ_HEIGHT"
+        )
+
+        // Check if all required permissions are granted
+        for (permission in requiredPermissions) {
+            if (ContextCompat.checkSelfPermission(requireContext(), permission)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                // Return false if any required permission is not granted
+                return false
+            }
+        }
+
+        // Return true if all required permissions are granted
+        return true
+    }
 }
