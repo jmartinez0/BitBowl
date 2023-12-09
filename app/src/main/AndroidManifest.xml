@@ -34,10 +34,6 @@
             android:name=".DashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".Dashboard"
-            android:exported="false"
-            android:label="@string/title_activity_dashboard" />
-        <activity
             android:name=".SplashScreen"
             android:exported="true">
             <intent-filter>

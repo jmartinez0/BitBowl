@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FoodFragment">
+    tools:context=".FoodFragment"
+    android:padding="8dp">
+    <!-- Search bar -->
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:hint="Search Recipes"
+        android:inputType="text"
+        android:imeOptions="actionDone"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@id/searchButton"
+        android:background="@drawable/round_outline"/>
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- Search button -->
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        android:layout_toEndOf="@id/searchEditText"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/round_button"/>
+
+    <!-- RecyclerView to display recipes -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Food" />
+        android:layout_below="@id/searchEditText"
+        android:layout_marginTop="8dp" />
 
-</FrameLayout>
+</RelativeLayout>

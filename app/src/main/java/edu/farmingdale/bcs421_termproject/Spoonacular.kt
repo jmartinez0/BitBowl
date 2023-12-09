@@ -1,11 +1,16 @@
 package edu.farmingdale.bcs421_termproject
 
+import android.util.Log
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Represents Spoonacular recipes retrieved from an external API.
@@ -22,14 +27,58 @@ class Spoonacular(
         private const val apiKey = "apiKey=7089afb084ac4235a7014fa58ba91a18"
         private val recipeList = mutableListOf<Spoonacular>()
 
-        fun getRandRecipe() {
-            // Define the API URL for Spoonacular recipes
-            val apiUrl = "https://api.spoonacular.com/recipes/random?number=1&tags=vegetarian,dessert&$apiKey"
+        suspend fun searchRecipes(query: String): List<Spoonacular> = withContext(Dispatchers.IO)  {
+            val apiUrl = "https://api.spoonacular.com/recipes/complexSearch?query=$query&$apiKey"
 
+            try {
+                // Make the API call to get recipes based on the search query
+                val jsonResponse = Spoonacular.getApiResponse(apiUrl)
+
+                // Parse the JSON response and return a list of recipes
+                return@withContext parseRecipes(jsonResponse)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return@withContext emptyList() // Return an empty list in case of an error
+        }
+
+        private fun parseRecipes(jsonResponse: JSONObject?): List<Spoonacular> {
+            val recipes = mutableListOf<Spoonacular>()
+
+            // Check if the JSON response is not null
+            if (jsonResponse != null) {
+                try {
+                    // Get the "results" array from the JSON response
+                    val results = jsonResponse.getJSONArray("results")
+
+                    // Iterate through each recipe in the results array
+                    for (i in 0 until results.length()) {
+                        val recipeObject = results.getJSONObject(i)
+
+                        // Extract relevant information from the recipe object
+                        val title = recipeObject.optString("title", "Unknown Title")
+                        val description = recipeObject.optString("summary", "Description Unavailable")
+                        val sourceUrl = recipeObject.optString("sourceUrl", "Source Unavailable")
+                        val image = recipeObject.optString("image", "Unknown Image")
+                        val readyInMinutes = recipeObject.optInt("readyInMinutes", 0)
+                        val servings = recipeObject.optInt("servings", 1)
+
+                        // Create a Spoonacular object and add it to the list
+                        recipes.add(Spoonacular(title, description, sourceUrl, image, readyInMinutes, servings))
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            Log.d("API_RESPONSE", "API response: $recipes")
+            return recipes
+        }
+        suspend fun getApiResponse(apiUrl: String): JSONObject? = withContext(Dispatchers.IO) {
             try {
                 // Create a URL object and open a connection
                 val url = URL(apiUrl)
-                val connection = url.openConnection() as HttpURLConnection
+                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "GET"
 
                 // Get the HTTP response code
@@ -38,8 +87,44 @@ class Spoonacular(
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     // Read and parse the JSON response
                     val inStream = BufferedReader(InputStreamReader(connection.inputStream))
-                    val response = StringBuilder()
                     var inputLine: String?
+                    val response = StringBuilder()
+
+                    while (inStream.readLine().also { inputLine = it } != null) {
+                        response.append(inputLine)
+                    }
+                    inStream.close()
+
+                    // Parse the JSON response
+                    return@withContext JSONObject(response.toString())
+                } else {
+                    println("Request failed with response code: $responseCode")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return@withContext null // Return null in case of an error
+        }
+
+        suspend fun getRandRecipe(): JSONObject? = withContext(Dispatchers.IO) {
+            // Define the API URL for Spoonacular recipes
+            val apiUrl = "https://api.spoonacular.com/recipes/random?number=1&tags=vegetarian,dessert&$apiKey"
+
+            try {
+                // Create a URL object and open a connection
+                val url = URL(apiUrl)
+                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+                connection.requestMethod = "GET"
+
+                // Get the HTTP response code
+                val responseCode = connection.responseCode
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    // Read and parse the JSON response
+                    val inStream = BufferedReader(InputStreamReader(connection.inputStream))
+                    var inputLine: String?
+                    val response = StringBuilder()
 
                     while (inStream.readLine().also { inputLine = it } != null) {
                         response.append(inputLine)
@@ -49,52 +134,13 @@ class Spoonacular(
                     // Parse the JSON response
                     val jsonResponse = JSONObject(response.toString())
 
-                    val results = jsonResponse.getJSONArray("recipes")
+                    val results: JSONArray = jsonResponse.getJSONArray("recipes")
 
-                    for (i in 0 until results.length()) {
-                        val recipe = results.getJSONObject(i)
-                        val title = recipe.getString("title")
-                        var description = "Description Unavailable: Please visit source link."
-
-                        if (recipe.has("summary") && !recipe.isNull("summary")) {
-                            description = recipe.getString("summary")
-                        }
-
-                        val sourceUrl = recipe.getString("sourceUrl")
-                        var image = "null"
-
-                        if (recipe.has("image") && !recipe.isNull("image")) {
-                            image = recipe.getString("image")
-                        }
-
-                        val readyInMinutes = recipe.getInt("readyInMinutes")
-                        val servings = recipe.getInt("servings")
-
-                        // Now you have various details in separate variables
-                        println("Title: $title")
-                        println("Description: $description")
-                        println("Source URL: $sourceUrl")
-                        println("Image URL: $image")
-                        println("Ready In Minutes: $readyInMinutes")
-                        println("Servings: $servings")
-
-                        // Extract and print analyzedInstructions
-                        val analyzedInstructions = recipe.getJSONArray("analyzedInstructions")
-                        for (j in 0 until analyzedInstructions.length()) {
-                            val instruction = analyzedInstructions.getJSONObject(j)
-                            val name = instruction.getString("name")
-                            println("Instruction Name: $name")
-                            val steps = instruction.getJSONArray("steps")
-                            for (k in 0 until steps.length()) {
-                                val step = steps.getJSONObject(k)
-                                val stepNumber = step.getInt("number")
-                                val stepDescription = step.getString("step")
-                                println("Step $stepNumber: $stepDescription")
-                            }
-                        }
-
-                        // Create a Spoonacular object and add it to the list
-                        recipeList.add(Spoonacular(title, description, sourceUrl, image, readyInMinutes, servings))
+                    if (results.length() > 0) {
+                        return@withContext results.getJSONObject(0)
+                    } else {
+                        // Handle the case when there are no recipes
+                        println("No recipes found.")
                     }
                 } else {
                     println("Request failed with response code: $responseCode")
@@ -102,6 +148,36 @@ class Spoonacular(
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+
+            return@withContext null // Return null in case of an error or no recipes
+        }
+
+
+        // Get multiple random recipes
+        suspend fun getRandRecipes(numRecipes: Int): List<Spoonacular> {
+            val recipes = mutableListOf<Spoonacular>()
+
+            repeat(numRecipes) {
+                getRandRecipe()?.let { jsonObject ->
+                    // Print the JSON response
+                    println(jsonObject.toString())
+
+                    try {
+                        val title = jsonObject.optString("title", "Temp Title")
+                        val description = jsonObject.optString("summary", "Description Unavailable: Please visit source link")
+                        val sourceUrl = jsonObject.getString("sourceUrl")
+                        val image = jsonObject.optString("image", "null")
+                        val readyInMinutes = jsonObject.getInt("readyInMinutes")
+                        val servings = jsonObject.getInt("servings")
+
+                        recipes.add(Spoonacular(title, description, sourceUrl, image, readyInMinutes, servings))
+                    } catch (e: JSONException) {
+                        println("Error parsing JSON: ${e.message}")
+                    }
+                }
+            }
+
+            return recipes
         }
 
         fun fetchRecipeInformation(recipeId: Int): JSONObject? {

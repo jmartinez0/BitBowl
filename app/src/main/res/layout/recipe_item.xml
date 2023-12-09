@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/titleTextView"
+                        android:layout_width="193dp"
+                        android:layout_height="wrap_content"
+                        android:text="Recipe Title"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <WebView
+                        android:id="@+id/descriptionWebView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Recipe Description"
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/readyInMinutesTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ready In Minutes: "
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/servingsTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Servings: "
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <ImageView
+                    android:id="@+id/recipeImageView"
+                    android:layout_width="170dp"
+                    android:layout_height="200dp"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_gravity="end|bottom"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="10dp"
+                android:contentDescription="Add"
+                app:backgroundTint="@color/bb_blue"
+                app:srcCompat="@drawable/cross_shape"/>
+        </FrameLayout>
+
+
+</LinearLayout>
