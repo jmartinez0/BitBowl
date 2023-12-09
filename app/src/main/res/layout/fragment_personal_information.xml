@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray">
+
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/transparent"
+        android:clickable="true"
+        android:padding="0dp"
+        android:src="@drawable/icon_back_arrow"
+        android:textColor="@color/bb_blue"
+        app:layout_constraintStart_toStartOf="@id/guideline8"
+        app:layout_constraintTop_toBottomOf="@id/guideline10" />
+
+    <TextView
+        android:id="@+id/accountInformationTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Personal Information"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline10" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/personalInformationCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline9"
+        app:layout_constraintStart_toStartOf="@id/guideline8"
+        app:layout_constraintTop_toBottomOf="@id/accountInformationTV"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="10dp" >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/dobTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:text="Date of Birth"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/editDOB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_edit"
+                app:layout_constraintStart_toEndOf="@id/dobTV"
+                app:layout_constraintTop_toTopOf="parent"
+                android:clickable="true"
+                app:layout_constraintBottom_toBottomOf="@id/dobTV" />
+
+
+            <EditText
+                android:id="@+id/dobET"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="00/00/0000"
+                android:textSize="20sp"
+                android:padding="10dp"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintStart_toStartOf="@id/dobTV"
+                android:background="@drawable/rounded_edittext"
+                android:inputType="none"
+                app:layout_constraintTop_toBottomOf="@id/dobTV" />
+
+
+            <TextView
+                android:id="@+id/sexTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="10dp"
+                android:text="Sex"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dobET"
+                tools:layout_editor_absoluteY="259dp" />
+
+            <ImageView
+                android:id="@+id/editSex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_edit"
+                app:layout_constraintTop_toTopOf="@id/sexTV"
+                app:layout_constraintBottom_toBottomOf="@id/sexTV"
+                app:layout_constraintStart_toEndOf="@id/sexTV"
+                android:clickable="true" />
+
+            <Spinner
+                android:id="@+id/sexSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/sexTV"
+                app:layout_constraintStart_toStartOf="@id/sexTV"
+                android:padding="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/rounded_edittext"
+                android:clickable="false" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Changing your date of birth and/or sex can affect how your calorie goals are calculated."
+        android:textSize="15sp"
+        android:padding="5dp"
+        app:layout_constraintStart_toStartOf="@id/guideline8"
+        app:layout_constraintEnd_toStartOf="@id/guideline9"
+        app:layout_constraintTop_toBottomOf="@id/personalInformationCard" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.02" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

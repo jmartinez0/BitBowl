@@ -1,7 +1,9 @@
 package edu.farmingdale.bcs421_termproject
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.*
@@ -17,6 +19,14 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
         firebaseAuth = FirebaseAuth.getInstance()
+
+        // Programatically adjust status bar color since we use multiple colors throughout the app
+        if (Build.VERSION.SDK_INT >= 21) {
+            val window = this.window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.statusBarColor = this.resources.getColor(R.color.bb_blue)
+        }
 
         val loginButton = findViewById<Button>(R.id.logInButton)
         val signUpButton = findViewById<Button>(R.id.signUpButton)
@@ -55,6 +65,7 @@ class LoginActivity : AppCompatActivity() {
             startActivityForResult(sIntent, RC_SIGN_IN)
         }
     }
+
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
