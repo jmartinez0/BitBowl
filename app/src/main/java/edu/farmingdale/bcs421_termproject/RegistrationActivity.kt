@@ -3,15 +3,13 @@ package edu.farmingdale.bcs421_termproject
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.widget.*
-import com.google.firebase.Firebase
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 
 class RegistrationActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -61,7 +59,8 @@ class RegistrationActivity : AppCompatActivity() {
                             "calorie-goal" to 0,
                             "protein-goal" to 0,
                             "carbs-goal" to 0,
-                            "fat-goal" to 0
+                            "fat-goal" to 0,
+                            "signed-in-before" to false
                         )
 
                         // Create a new user document with their unique email address as the name of the document
@@ -70,12 +69,18 @@ class RegistrationActivity : AppCompatActivity() {
                             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
 
-                        //  Go to dashboard
-                        startActivity(Intent(this, DashboardActivity::class.java))
+                        //  Go to second registration activity. Pass through the email to use for firebase methods in next activity.
+                        val intent = Intent(this, RegistrationActivity2::class.java)
+                        intent.putExtra("email", email)
+                        startActivity(intent)
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.exception)
-                        Toast.makeText(baseContext, "Authentication failed. Emails must be unique and passwords must be at least 6 characters long.", Toast.LENGTH_SHORT,).show()
+                        Toast.makeText(
+                            baseContext,
+                            "Authentication failed. Emails must be unique and passwords must be at least 6 characters long.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
                 }
