@@ -11,24 +11,28 @@ import java.net.HttpURLConnection
 import java.net.URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.collections.find
+import kotlin.random.Random
 
 /**
  * Represents Spoonacular recipes retrieved from an external API.
  */
 class Spoonacular(
+    val id: Int,
     val title: String,
     val description: String,
     var sourceUrl: String,
     var image: String,
     var readyInMinutes: Int,
-    var servings: Int
+    var servings: Int,
+    var nutrition: Nutrition
 ) {
     companion object {
-        private const val apiKey = "apiKey=7089afb084ac4235a7014fa58ba91a18"
+        private const val apiKey = "apiKey=ad69717dadc6439588a0d061fcc6e17c"
         private val recipeList = mutableListOf<Spoonacular>()
 
         suspend fun searchRecipes(query: String): List<Spoonacular> = withContext(Dispatchers.IO)  {
-            val apiUrl = "https://api.spoonacular.com/recipes/complexSearch?query=$query&$apiKey"
+            val apiUrl = "https://api.spoonacular.com/recipes/complexSearch?query=$query&addRecipeNutrition=true&$apiKey"
 
             try {
                 // Make the API call to get recipes based on the search query
@@ -57,6 +61,7 @@ class Spoonacular(
                         val recipeObject = results.getJSONObject(i)
 
                         // Extract relevant information from the recipe object
+                        val id = recipeObject.optInt("id", 1)
                         val title = recipeObject.optString("title", "Unknown Title")
                         val description = recipeObject.optString("summary", "Description Unavailable")
                         val sourceUrl = recipeObject.optString("sourceUrl", "Source Unavailable")
@@ -64,8 +69,20 @@ class Spoonacular(
                         val readyInMinutes = recipeObject.optInt("readyInMinutes", 0)
                         val servings = recipeObject.optInt("servings", 1)
 
+                        // Extract nutritional information
+                        val nutritionObject = recipeObject.optJSONObject("nutrition")
+                        val nutrientsArray = nutritionObject?.optJSONArray("nutrients")
+
+                        val calories = nutrientsArray?.getJSONObject(0)?.optDouble("amount") ?: 0.0
+                        val fat = nutrientsArray?.getJSONObject(1)?.optDouble("amount") ?: 0.0
+                        val carbohydrates = nutrientsArray?.getJSONObject(3)?.optDouble("amount") ?: 0.0
+                        val protein = nutrientsArray?.getJSONObject(9)?.optDouble("amount") ?: 0.0
+
+                        // Create a Nutrition object
+                        val nutrition = Nutrition(calories, carbohydrates, protein, fat)
+
                         // Create a Spoonacular object and add it to the list
-                        recipes.add(Spoonacular(title, description, sourceUrl, image, readyInMinutes, servings))
+                        recipes.add(Spoonacular(id, title, description, sourceUrl, image, readyInMinutes, servings, nutrition))
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -108,8 +125,9 @@ class Spoonacular(
         }
 
         suspend fun getRandRecipe(): JSONObject? = withContext(Dispatchers.IO) {
+            val randNum = Random.nextInt(0, 715391).toString()
             // Define the API URL for Spoonacular recipes
-            val apiUrl = "https://api.spoonacular.com/recipes/random?number=1&tags=vegetarian,dessert&$apiKey"
+            val apiUrl = "https://api.spoonacular.com/recipes/$randNum/information?includeNutrition=true&$apiKey"
 
             try {
                 // Create a URL object and open a connection
@@ -131,17 +149,8 @@ class Spoonacular(
                     }
                     inStream.close()
 
-                    // Parse the JSON response
-                    val jsonResponse = JSONObject(response.toString())
-
-                    val results: JSONArray = jsonResponse.getJSONArray("recipes")
-
-                    if (results.length() > 0) {
-                        return@withContext results.getJSONObject(0)
-                    } else {
-                        // Handle the case when there are no recipes
-                        println("No recipes found.")
-                    }
+                    // Parse the JSON response directly as a JSONObject
+                    return@withContext JSONObject(response.toString())
                 } else {
                     println("Request failed with response code: $responseCode")
                 }
@@ -163,6 +172,7 @@ class Spoonacular(
                     println(jsonObject.toString())
 
                     try {
+                        val id = jsonObject.getInt("id")
                         val title = jsonObject.optString("title", "Temp Title")
                         val description = jsonObject.optString("summary", "Description Unavailable: Please visit source link")
                         val sourceUrl = jsonObject.getString("sourceUrl")
@@ -170,7 +180,20 @@ class Spoonacular(
                         val readyInMinutes = jsonObject.getInt("readyInMinutes")
                         val servings = jsonObject.getInt("servings")
 
-                        recipes.add(Spoonacular(title, description, sourceUrl, image, readyInMinutes, servings))
+                        // val nutrition = Spoonacular.Nutrition(0.0, 0.0, 0.0, 0.0)
+                        // Extract nutritional information
+                        val nutritionObject = jsonObject.optJSONObject("nutrition")
+                        val nutrientsArray = nutritionObject?.optJSONArray("nutrients")
+
+                        val calories = nutrientsArray?.getJSONObject(0)?.optDouble("amount") ?: 0.0
+                        val fat = nutrientsArray?.getJSONObject(1)?.optDouble("amount") ?: 0.0
+                        val carbohydrates = nutrientsArray?.getJSONObject(3)?.optDouble("amount") ?: 0.0
+                        val protein = nutrientsArray?.getJSONObject(9)?.optDouble("amount") ?: 0.0
+
+                        // Create a Nutrition object
+                        val nutrition = Nutrition(calories, carbohydrates, protein, fat)
+
+                        recipes.add(Spoonacular(id, title, description, sourceUrl, image, readyInMinutes, servings, nutrition))
                     } catch (e: JSONException) {
                         println("Error parsing JSON: ${e.message}")
                     }
@@ -209,38 +232,14 @@ class Spoonacular(
             }
             return null
         }
-
-        fun fetchNutritionLabel(recipeId: Int): String? {
-            val apiUrl = "https://api.spoonacular.com/recipes/$recipeId/nutritionLabel?$apiKey"
-
-            try {
-                val url = URL(apiUrl)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-
-                // Set the Accept header to request HTML content
-                connection.setRequestProperty("Accept", "text/html")
-
-                val responseCode = connection.responseCode
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    val inStream = BufferedReader(InputStreamReader(connection.inputStream))
-                    val response = StringBuilder()
-                    var inputLine: String?
-
-                    while (inStream.readLine().also { inputLine = it } != null) {
-                        response.append(inputLine)
-                    }
-                    inStream.close()
-
-                    return response.toString()
-                } else {
-                    println("Request failed with response code: $responseCode")
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return null
-        }
     }
+
+
+    // Create a Nutrition class to store nutrition information
+    data class Nutrition(
+        val calories: Double,
+        val carbohydrates: Double,
+        val protein: Double,
+        val fat: Double
+    )
 }

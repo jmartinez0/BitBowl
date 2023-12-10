@@ -1,5 +1,6 @@
 package edu.farmingdale.bcs421_termproject
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,6 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.firestore.FirebaseFirestore
 import edu.farmingdale.bcs421_termproject.Spoonacular.Companion.searchRecipes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -38,6 +41,7 @@ class FoodFragment : Fragment() {
     private var param2: String? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecipeAdapter
+    val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,15 +140,32 @@ class FoodFragment : Fragment() {
             private val recipeImageView: ImageView = itemView.findViewById(R.id.recipeImageView)
             private val readyInMinutesTextView: TextView = itemView.findViewById(R.id.readyInMinutesTextView)
             private val servingsTextView: TextView = itemView.findViewById(R.id.servingsTextView)
+            private val fab: FloatingActionButton = itemView.findViewById(R.id.fab)
+            private var recipeId = 1
 
             init {
                 // Enable JavaScript in the WebView
                 descriptionWebView.settings.javaScriptEnabled = true
+
+                // Add click listener to the FAB
+                fab.setOnClickListener {
+                    /* Add food data to the Food collection
+                    db.collection("Users").document(email).collection("Food").document("Put date here")
+                        .set("Put hashMap data here")
+                        .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                        .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                    */
+
+                    // Create a JsonObject and output it to the console
+                    // val recipeJsonObject = createRecipeJsonObject()
+                    // Log.d("FAB_CLICK", "Recipe JSON: $recipeJsonObject")
+                }
             }
+
+
 
             fun bind(recipe: Spoonacular) {
                 titleTextView.text = recipe.title
-
                 // Load description into WebView
                 descriptionWebView.loadData(recipe.description, "text/html", "UTF-8")
 
@@ -156,8 +177,20 @@ class FoodFragment : Fragment() {
                 // Set Ready In Minutes and Servings
                 readyInMinutesTextView.text = "Ready In Minutes: ${recipe.readyInMinutes}"
                 servingsTextView.text = "Servings: ${recipe.servings}"
-
+                recipeId = recipe.id
+                println(recipe.nutrition)
                 Log.d("BIND_METHOD", "Data bound for recipe: ${recipe.title}")
+            }
+
+            private fun createRecipeJsonObject(): JSONObject {
+                val recipeJsonObject = JSONObject()
+                recipeJsonObject.put("id", recipeId)
+                recipeJsonObject.put("title", titleTextView.text.toString())
+                recipeJsonObject.put("description", descriptionWebView.url) // You may need to adjust this based on the actual data in the WebView
+                recipeJsonObject.put("image", recipeImageView.contentDescription) // You may need to adjust this based on the actual data in the ImageView
+                recipeJsonObject.put("readyInMinutes", readyInMinutesTextView.text.toString())
+                recipeJsonObject.put("servings", servingsTextView.text.toString())
+                return recipeJsonObject
             }
         }
     }
