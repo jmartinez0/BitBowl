@@ -31,20 +31,38 @@ class Spoonacular(
         private const val apiKey = "apiKey=ad69717dadc6439588a0d061fcc6e17c"
         private val recipeList = mutableListOf<Spoonacular>()
 
-        suspend fun searchRecipes(query: String): List<Spoonacular> = withContext(Dispatchers.IO)  {
-            val apiUrl = "https://api.spoonacular.com/recipes/complexSearch?query=$query&addRecipeNutrition=true&$apiKey"
 
+        suspend fun getApiResponse(apiUrl: String): JSONObject? = withContext(Dispatchers.IO) {
             try {
-                // Make the API call to get recipes based on the search query
-                val jsonResponse = Spoonacular.getApiResponse(apiUrl)
+                // Create a URL object and open a connection
+                val url = URL(apiUrl)
+                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+                connection.requestMethod = "GET"
 
-                // Parse the JSON response and return a list of recipes
-                return@withContext parseRecipes(jsonResponse)
+                // Get the HTTP response code
+                val responseCode = connection.responseCode
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    // Read and parse the JSON response
+                    val inStream = BufferedReader(InputStreamReader(connection.inputStream))
+                    var inputLine: String?
+                    val response = StringBuilder()
+
+                    while (inStream.readLine().also { inputLine = it } != null) {
+                        response.append(inputLine)
+                    }
+                    inStream.close()
+
+                    // Parse the JSON response
+                    return@withContext JSONObject(response.toString())
+                } else {
+                    println("Request failed with response code: $responseCode")
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
 
-            return@withContext emptyList() // Return an empty list in case of an error
+            return@withContext null // Return null in case of an error
         }
 
         private fun parseRecipes(jsonResponse: JSONObject?): List<Spoonacular> {
@@ -91,37 +109,21 @@ class Spoonacular(
             Log.d("API_RESPONSE", "API response: $recipes")
             return recipes
         }
-        suspend fun getApiResponse(apiUrl: String): JSONObject? = withContext(Dispatchers.IO) {
+
+        suspend fun searchRecipes(query: String): List<Spoonacular> = withContext(Dispatchers.IO)  {
+            val apiUrl = "https://api.spoonacular.com/recipes/complexSearch?query=$query&addRecipeNutrition=true&$apiKey"
+
             try {
-                // Create a URL object and open a connection
-                val url = URL(apiUrl)
-                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
+                // Make the API call to get recipes based on the search query
+                val jsonResponse = Spoonacular.getApiResponse(apiUrl)
 
-                // Get the HTTP response code
-                val responseCode = connection.responseCode
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    // Read and parse the JSON response
-                    val inStream = BufferedReader(InputStreamReader(connection.inputStream))
-                    var inputLine: String?
-                    val response = StringBuilder()
-
-                    while (inStream.readLine().also { inputLine = it } != null) {
-                        response.append(inputLine)
-                    }
-                    inStream.close()
-
-                    // Parse the JSON response
-                    return@withContext JSONObject(response.toString())
-                } else {
-                    println("Request failed with response code: $responseCode")
-                }
+                // Parse the JSON response and return a list of recipes
+                return@withContext parseRecipes(jsonResponse)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
 
-            return@withContext null // Return null in case of an error
+            return@withContext emptyList() // Return an empty list in case of an error
         }
 
         suspend fun getRandRecipe(): JSONObject? = withContext(Dispatchers.IO) {
@@ -202,38 +204,7 @@ class Spoonacular(
 
             return recipes
         }
-
-        fun fetchRecipeInformation(recipeId: Int): JSONObject? {
-            val apiUrl = "https://api.spoonacular.com/recipes/$recipeId/information?$apiKey"
-
-            try {
-                val url = URL(apiUrl)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-
-                val responseCode = connection.responseCode
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    val inStream = BufferedReader(InputStreamReader(connection.inputStream))
-                    val response = StringBuilder()
-                    var inputLine: String?
-
-                    while (inStream.readLine().also { inputLine = it } != null) {
-                        response.append(inputLine)
-                    }
-                    inStream.close()
-
-                    return JSONObject(response.toString())
-                } else {
-                    println("Request failed with response code: $responseCode")
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return null
-        }
     }
-
 
     // Create a Nutrition class to store nutrition information
     data class Nutrition(
