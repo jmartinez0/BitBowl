@@ -87,7 +87,6 @@ class RegistrationActivity2 : AppCompatActivity() {
 
                     // Calculate calories and macros
                     val listOfCaloriesAndMacros = calculateCaloriesMacros(height.toInt(), weight.toFloat(), age, sex, activityLevel)
-                    Toast.makeText(this, listOfCaloriesAndMacros[0].toString(), Toast.LENGTH_SHORT).show()
                     // Set up the hash map data to be added to Firestore
                     val data = hashMapOf(
                         "height" to height,
@@ -107,7 +106,7 @@ class RegistrationActivity2 : AppCompatActivity() {
                             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
                     }
-                    // Go to Dashboard
+                    // Go to Dashboard activity
                     startActivity(Intent(this, DashboardActivity::class.java))
                 } else {
                     Toast.makeText(this, "Fill all fields in the correct format.", Toast.LENGTH_SHORT).show()
