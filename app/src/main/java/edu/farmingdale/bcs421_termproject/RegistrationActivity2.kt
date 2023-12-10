@@ -20,8 +20,6 @@ import java.util.Calendar
  */
 class RegistrationActivity2 : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-    //private val intent = getIntent()
-    //private val email = intent.getStringExtra("email")
 
     // The multipliers to be used in the Mifflin-St Jeor formula calculations.
     val sedentaryMultiplier = 1.2
@@ -29,10 +27,14 @@ class RegistrationActivity2 : AppCompatActivity() {
     val lightlyActiveMultiplier = 1.425
     val moderatelyActiveMultiplier = 1.55
     val veryActiveMultiplier = 1.75
+    val proteinRatio = 0.25
+    val carbsRatio = 0.50
+    val fatRatio = 0.25
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.registration_activity2)
+        var email = getIntent().getStringExtra("email") // Get email passed through the intent
         auth = FirebaseAuth.getInstance()
         val db = FirebaseFirestore.getInstance()
         // Programatically adjust status bar color since we use multiple colors throughout the app
@@ -73,41 +75,46 @@ class RegistrationActivity2 : AppCompatActivity() {
             val weight = weightEditText.text.toString().trim()
             val dob = dobEditText.text.toString().trim()
             val sex = sexDropDownMenu.selectedItem.toString()
-            val activityLevel = activityDropDownMenu.selectedItem
-            Toast.makeText(this, "Activity level:"+activityLevel.toString(),Toast.LENGTH_LONG)
+            val activityLevel = activityDropDownMenu.selectedItem.toString()
 
-            // Check regex for date of birth first
-//            if (email?.let { it1 -> checkDOB(it1) } == true) {
-//                // Get the last 4 digits of DOB and do the math for the user's current age
-//                val lastDigits = dob.takeLast(4).toInt()
-//                val currentYear = Calendar.getInstance().get(Calendar.YEAR);
-//                val age = currentYear - lastDigits
-//
-//                // Calculate calories and macros
-//                //val listOfCaloriesAndMacros = calculateCaloriesMacros()
-//                // Set up the hash map data to be added to Firestore
-//                val data = hashMapOf(
-//                    "height" to height,
-//                    "weight" to weight,
-//                    "age" to age,
-//                    "sex" to sex,
-//                    "calorie-goal" to 0,
-//                    "protein-goal" to 0,
-//                    "carbs-goal" to 0,
-//                    "fat-goal" to 0
-//                )
-//            } else {
-//                Toast.makeText(this, "Fill all fields in the correct format.", Toast.LENGTH_SHORT)
-//            }
+            if (height.isNotEmpty() && weight.isNotEmpty() && dob.isNotEmpty() && sex.isNotEmpty() && activityLevel.isNotEmpty()) {
+                // Check regex for date of birth first
+                if (checkDOB(dob)) {
+                    // Get the last 4 digits of DOB and do the math for the user's current age
+                    val lastDigits = dob.takeLast(4).toInt()
+                    val currentYear = Calendar.getInstance().get(Calendar.YEAR);
+                    val age = currentYear - lastDigits
 
-                        // Create a new user document with their unique email address as the name of the document
-//                        db.collection("Users").document(email)
-//                            .set(data)
-//                            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-//                            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
-//
-//                        //  Go to dashboard
-//                        startActivity(Intent(this, DashboardActivity::class.java))
+                    // Calculate calories and macros
+                    val listOfCaloriesAndMacros = calculateCaloriesMacros(height.toInt(), weight.toFloat(), age, sex, activityLevel)
+                    Toast.makeText(this, listOfCaloriesAndMacros[0].toString(), Toast.LENGTH_SHORT).show()
+                    // Set up the hash map data to be added to Firestore
+                    val data = hashMapOf(
+                        "height" to height,
+                        "weight" to weight,
+                        "date-of-birth" to dob,
+                        "age" to age,
+                        "sex" to sex,
+                        "calorie-goal" to listOfCaloriesAndMacros[0],
+                        "protein-goal" to listOfCaloriesAndMacros[1],
+                        "carbs-goal" to listOfCaloriesAndMacros[2],
+                        "fat-goal" to listOfCaloriesAndMacros[3]
+                    )
+                    // Update the user's document with their maintenance calorie and macro goals
+                    if (email != null) {
+                        db.collection("Users").document(email)
+                            .set(data)
+                            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                    }
+                    // Go to Dashboard
+                    startActivity(Intent(this, DashboardActivity::class.java))
+                } else {
+                    Toast.makeText(this, "Fill all fields in the correct format.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "All fields must be filled.", Toast.LENGTH_SHORT).show()
+            }
 
         }
     }
@@ -116,19 +123,47 @@ class RegistrationActivity2 : AppCompatActivity() {
      * Checks date of birth format. Must be MM/DD/YYYY. Returns true if the user inputted a valid format.
      */
     private fun checkDOB(dob: String): Boolean {
-        // DOB must be in the format MM/DD/YY
-        // We check for month by allowing a leading 0 for months 1-9 (september is 09 for example)
-        // For october-december we allow 1 followed by a digit from 0-2
-        // Then for days, we allow days from 01-31
-        // Then for year, we take the last two digits to represent year (04 is 2004 for example)
-        val dobPattern = "^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/\\d{2}$"
+        val dobPattern = "^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/(19|20)\\d{2}$"
         return dob.matches(dobPattern.toRegex())
     }
 
     /**
-     * Calculates the maintenance calories and macros for a male. Uses the Mifflin-St Jeor formula.
+     * Calculates the maintenance calories and macros for a user. Uses the Mifflin-St Jeor formula.
      */
-    private fun calculateCaloriesMacros(height: Int, weight: Float, age: Int, sex: String) {
+    private fun calculateCaloriesMacros(height: Int, weight: Float, age: Int, sex: String, activityLevel: String) : List<Int> {
+        // First, get the multiplier based on activity level
+        val activityLevelArray = resources.getStringArray(R.array.activity_level_options)
+        var multiplier = 0.0
+        if (activityLevel == activityLevelArray[0]) {
+            multiplier = sedentaryMultiplier
+        }
+        if (activityLevel == activityLevelArray[1]) {
+            multiplier = slightlyActiveMultiplier
+        }
+        if (activityLevel == activityLevelArray[2]) {
+            multiplier = lightlyActiveMultiplier
+        }
+        if (activityLevel == activityLevelArray[3]) {
+            multiplier = moderatelyActiveMultiplier
+        }
+        if (activityLevel == activityLevelArray[4]) {
+            multiplier = veryActiveMultiplier
+        }
+        // Convert weight and height to be compatible with the Mifflin-St Jeor formula.
+        val heightAdjusted = height * 2.54 // cm
+        val weightAdjusted = weight / 2.205 // kg
 
+        var calories = 0
+        // Use the Mifflin-St Jeor formula to calculate calories
+        if (sex == "Male") {
+            calories = (((10 * weightAdjusted) + (6.25 * heightAdjusted) - (5 * age) + 5) * multiplier).toInt()
+        } else {
+            calories = (((10 * weightAdjusted) + (6.25 * heightAdjusted) - (5 * age) - 161) * multiplier).toInt()
+        }
+        // Divide the calories based on a widely accepted protein/carb/fat ratio to weight maintenance
+        val protein = ((calories * proteinRatio) / 4).toInt()
+        val carbs = ((calories * carbsRatio) / 4).toInt()
+        val fat = ((calories * fatRatio) / 9).toInt()
+        return listOf(calories, protein, carbs, fat) // Return a list of all 4 numbers to put into Firestore later
     }
 }

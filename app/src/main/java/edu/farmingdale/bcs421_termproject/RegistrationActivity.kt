@@ -37,53 +37,58 @@ class RegistrationActivity : AppCompatActivity() {
         }
 
         signUpButton.setOnClickListener {
-            // Code to verify entered details are valid
-            // Email format, unique email, password length, etc.
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
 
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success")
-                        val user = auth.currentUser
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success")
+                            val user = auth.currentUser
 
-                        // Setting up the new user's data fields in their unique document
-                        val data = hashMapOf(
-                            "email" to email,
-                            "height" to 0,
-                            "weight" to 0,
-                            "age" to 0,
-                            "sex" to "none",
-                            "calorie-goal" to 0,
-                            "protein-goal" to 0,
-                            "carbs-goal" to 0,
-                            "fat-goal" to 0,
-                            "signed-in-before" to false
-                        )
+                            // Setting up the new user's data fields in their unique document
+                            val data = hashMapOf(
+                                "email" to email,
+                                "height" to 0,
+                                "weight" to 0,
+                                "age" to 0,
+                                "date-of-birth" to "none",
+                                "sex" to "none",
+                                "calorie-goal" to 0,
+                                "protein-goal" to 0,
+                                "carbs-goal" to 0,
+                                "fat-goal" to 0,
+                                "signed-in-before" to false
+                            )
 
-                        // Create a new user document with their unique email address as the name of the document
-                        db.collection("Users").document(email)
-                            .set(data)
-                            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
-                            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+                            // Create a new user document with their unique email address as the name of the document
+                            db.collection("Users").document(email)
+                                .set(data)
+                                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
 
-                        //  Go to second registration activity. Pass through the email to use for firebase methods in next activity.
-                        val intent = Intent(this, RegistrationActivity2::class.java)
-                        intent.putExtra("email", email)
-                        startActivity(intent)
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.exception)
-                        Toast.makeText(
-                            baseContext,
-                            "Authentication failed. Emails must be unique and passwords must be at least 6 characters long.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                            //  Go to second registration activity. Pass through the email to use for firebase methods in next activity.
+                            val intent = Intent(this, RegistrationActivity2::class.java)
+                            intent.putExtra("email", email)
+                            startActivity(intent)
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithEmail:failure", task.exception)
+                            Toast.makeText(
+                                baseContext,
+                                "Emails must be unique and passwords must be at least 6 characters long.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
+            } else {
+                Toast.makeText(this, "All fields must be filled.", Toast.LENGTH_SHORT).show()
+            }
 
-                }
+
         }
+
     }
 }
