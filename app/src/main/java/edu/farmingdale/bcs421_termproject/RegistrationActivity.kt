@@ -54,9 +54,14 @@ class RegistrationActivity : AppCompatActivity() {
                         // Setting up the new user's data fields in their unique document
                         val data = hashMapOf(
                             "email" to email,
-                            "height" to null,
-                            "weight" to null,
-                            "age" to null
+                            "height" to 0,
+                            "weight" to 0,
+                            "age" to 0,
+                            "sex" to "none",
+                            "calorie-goal" to 0,
+                            "protein-goal" to 0,
+                            "carbs-goal" to 0,
+                            "fat-goal" to 0
                         )
 
                         // Create a new user document with their unique email address as the name of the document
@@ -64,11 +69,13 @@ class RegistrationActivity : AppCompatActivity() {
                             .set(data)
                             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+                        //  Go to dashboard
                         startActivity(Intent(this, DashboardActivity::class.java))
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.exception)
-                        Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT,).show()
+                        Toast.makeText(baseContext, "Authentication failed. Emails must be unique and passwords must be at least 6 characters long.", Toast.LENGTH_SHORT,).show()
                     }
 
                 }
