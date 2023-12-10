@@ -87,7 +87,6 @@ class RegistrationActivity2 : AppCompatActivity() {
 
                     // Calculate calories and macros
                     val listOfCaloriesAndMacros = calculateCaloriesMacros(height.toInt(), weight.toFloat(), age, sex, activityLevel)
-                    Toast.makeText(this, listOfCaloriesAndMacros[0].toString(), Toast.LENGTH_SHORT).show()
                     // Set up the hash map data to be added to Firestore
                     val data = hashMapOf(
                         "height" to height,
