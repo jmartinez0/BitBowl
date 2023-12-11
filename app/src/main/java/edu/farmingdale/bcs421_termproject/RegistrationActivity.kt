@@ -62,7 +62,7 @@ class RegistrationActivity : AppCompatActivity() {
                                 "protein-goal" to 0,
                                 "carbs-goal" to 0,
                                 "fat-goal" to 0,
-                                "step-goal" to 0,
+                                "steps-goal" to 0,
                                 "signed-in-before" to false
                             )
 

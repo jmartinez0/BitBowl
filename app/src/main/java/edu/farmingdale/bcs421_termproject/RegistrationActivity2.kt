@@ -98,7 +98,7 @@ class RegistrationActivity2 : AppCompatActivity() {
                         "protein-goal" to listOfCaloriesAndMacros[1],
                         "carbs-goal" to listOfCaloriesAndMacros[2],
                         "fat-goal" to listOfCaloriesAndMacros[3],
-                        "step-goal" to 0,
+                        "steps-goal" to 5000,
                         "signed-in-before" to true
                     )
 
