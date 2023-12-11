@@ -19,7 +19,7 @@ class SplashScreen : AppCompatActivity() {
 
         // Wait 2 seconds before switching from Splash Screen to Login Activity
         Handler().postDelayed({
-            val intent = Intent(this, RegistrationActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         }, 2000)

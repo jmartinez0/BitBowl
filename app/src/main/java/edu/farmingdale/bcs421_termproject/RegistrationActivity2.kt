@@ -88,7 +88,7 @@ class RegistrationActivity2 : AppCompatActivity() {
                     // Calculate calories and macros
                     val listOfCaloriesAndMacros = calculateCaloriesMacros(height.toInt(), weight.toFloat(), age, sex, activityLevel)
                     // Set up the hash map data to be added to Firestore
-                    val data = hashMapOf(
+                    val mainData = hashMapOf(
                         "height" to height,
                         "weight" to weight,
                         "date-of-birth" to dob,
@@ -97,16 +97,19 @@ class RegistrationActivity2 : AppCompatActivity() {
                         "calorie-goal" to listOfCaloriesAndMacros[0],
                         "protein-goal" to listOfCaloriesAndMacros[1],
                         "carbs-goal" to listOfCaloriesAndMacros[2],
-                        "fat-goal" to listOfCaloriesAndMacros[3]
+                        "fat-goal" to listOfCaloriesAndMacros[3],
+                        "steps-goal" to 5000,
+                        "signed-in-before" to true
                     )
+
                     // Update the user's document with their maintenance calorie and macro goals
                     if (email != null) {
                         db.collection("Users").document(email)
-                            .set(data)
+                            .set(mainData)
                             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
                     }
-                    // Go to Dashboard
+                    // Go to Dashboard activity
                     startActivity(Intent(this, DashboardActivity::class.java))
                 } else {
                     Toast.makeText(this, "Fill all fields in the correct format.", Toast.LENGTH_SHORT).show()

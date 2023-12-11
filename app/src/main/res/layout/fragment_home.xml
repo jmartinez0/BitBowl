@@ -41,17 +41,28 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/formulaTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Calories = Goal - Food + Exercise"
+                android:textColor="#868686"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/caloriesTV" />
+
             <ProgressBar
                 android:id="@+id/caloriesProgress"
                 style="@style/CircularProgressBar"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:indeterminateOnly="false"
-                android:progress="50"
+                android:progress="0"
                 android:progressDrawable="@drawable/progress_circle"
                 android:rotation="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/caloriesTV" />
+                app:layout_constraintTop_toBottomOf="@id/formulaTV" />
 
             <TextView
                 android:id="@+id/caloriesProgressTV"
@@ -171,7 +182,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.26" />
+                app:layout_constraintGuide_percent="0.34" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline15"
@@ -217,7 +228,7 @@
                 android:layout_width="125dp"
                 android:layout_height="125dp"
                 android:indeterminateOnly="false"
-                android:progress="50"
+                android:progress="0"
                 android:progressDrawable="@drawable/progress_circle"
                 android:rotation="0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -253,7 +264,7 @@
                 android:layout_width="125dp"
                 android:layout_height="125dp"
                 android:indeterminateOnly="false"
-                android:progress="50"
+                android:progress="0"
                 android:progressDrawable="@drawable/progress_circle"
                 android:rotation="0"
                 app:layout_constraintStart_toEndOf="@id/proteinProgress"
@@ -289,7 +300,7 @@
                 android:layout_width="125dp"
                 android:layout_height="125dp"
                 android:indeterminateOnly="false"
-                android:progress="50"
+                android:progress="0"
                 android:progressDrawable="@drawable/progress_circle"
                 android:rotation="0"
                 app:layout_constraintStart_toEndOf="@id/carbsProgress"
@@ -374,12 +385,13 @@
 
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/stepsProgress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
                 android:indeterminate="false"
                 android:padding="10dp"
-                android:progress="50"
+                android:progress="0"
                 app:indicatorColor="@color/bb_blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
