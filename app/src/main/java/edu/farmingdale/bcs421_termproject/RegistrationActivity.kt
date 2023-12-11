@@ -10,6 +10,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 class RegistrationActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -49,7 +51,7 @@ class RegistrationActivity : AppCompatActivity() {
                             val user = auth.currentUser
 
                             // Setting up the new user's data fields in their unique document
-                            val data = hashMapOf(
+                            val mainData = hashMapOf(
                                 "email" to email,
                                 "height" to 0,
                                 "weight" to 0,
@@ -60,12 +62,46 @@ class RegistrationActivity : AppCompatActivity() {
                                 "protein-goal" to 0,
                                 "carbs-goal" to 0,
                                 "fat-goal" to 0,
+                                "step-goal" to 0,
                                 "signed-in-before" to false
                             )
 
+                            // Setting up the new user's food data. Empty at first as they have not added any food.
+                            val foodData = hashMapOf(
+                                "first-food-entry" to true // This is just to get some data in the hash map so it can work with Firebase's methods.
+                            )
+
+                            // Setting up the user's daily goal data. Starts at 0 as they have not entered calories/macros for the day.
+                            val progressData = hashMapOf(
+                                "calories-today" to 0,
+                                "protein-today" to 0,
+                                "carbs-today" to 0,
+                                "fat-today" to 0,
+                                "steps-today" to 0,
+                                "calories-burned-today" to 0,
+                                "exercise-time-today" to 0
+                            )
+
+                            // Used for getting today's date in a specific format as the name of the documents in the Food and Goals collections.
+                            val cal = Calendar.getInstance()
+                            val dateFormat = SimpleDateFormat("MM-dd-yyyy")
+                            val todaysDateFormatted = dateFormat.format(cal.time)
+
                             // Create a new user document with their unique email address as the name of the document
                             db.collection("Users").document(email)
-                                .set(data)
+                                .set(mainData)
+                                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+                            // Create the food collection to be populated later
+                            db.collection("Users").document(email).collection("Food").document(todaysDateFormatted)
+                                .set(foodData)
+                                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+                            // Create the goals collection to be populated later
+                            db.collection("Users").document(email).collection("Progress").document(todaysDateFormatted)
+                                .set(progressData)
                                 .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
                                 .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
 
