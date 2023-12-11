@@ -1,13 +1,16 @@
 package edu.farmingdale.bcs421_termproject
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,6 +32,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     val cal = Calendar.getInstance()
     val dateFormat = SimpleDateFormat("MM-dd-yyyy")
     val todaysDateFormatted = dateFormat.format(cal.time) // Today's date formatted for the Firebase methods
+
+    lateinit var caloriesProgressCircle: ProgressBar
+    lateinit var proteinProgressCircle: ProgressBar
+    lateinit var carbsProgressCircle: ProgressBar
+    lateinit var fatProgressCircle: ProgressBar
+    lateinit var stepsProgressBar: ProgressBar
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,24 +47,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         var view :View = binding.root
 
         // Calories card
-        val caloriesProgressCircle = view.findViewById<ProgressBar>(R.id.caloriesProgress)
+        caloriesProgressCircle = view.findViewById<ProgressBar>(R.id.caloriesProgress)
         val caloriesText = view.findViewById<TextView>(R.id.caloriesProgressTV)
         val goalCalories = view.findViewById<TextView>(R.id.calorieGoalAmountTV)
         val foodCalories = view.findViewById<TextView>(R.id.foodAmountTV)
         val exerciseCalories = view.findViewById<TextView>(R.id.exerciseAmountTV)
         // Macros card
-        val proteinProgressCircle = view.findViewById<ProgressBar>(R.id.proteinProgress)
+        proteinProgressCircle = view.findViewById<ProgressBar>(R.id.proteinProgress)
         val proteinText = view.findViewById<TextView>(R.id.proteinProgressTV)
-        val carbsProgressCircle = view.findViewById<ProgressBar>(R.id.carbsProgress)
+        carbsProgressCircle = view.findViewById<ProgressBar>(R.id.carbsProgress)
         val carbsText = view.findViewById<TextView>(R.id.carbsProgressTV)
-        val fatProgressCircle = view.findViewById<ProgressBar>(R.id.fatProgress)
+        fatProgressCircle = view.findViewById<ProgressBar>(R.id.fatProgress)
         val fatText = view.findViewById<TextView>(R.id.fatProgressTV)
         // Steps card
         val stepsAmount = view.findViewById<TextView>(R.id.stepsAmountTV)
-        val stepsProgressBar = view.findViewById<ProgressBar>(R.id.stepsProgress)
+        stepsProgressBar = view.findViewById<ProgressBar>(R.id.stepsProgress)
         // Exercise card
         val exerciseCal = view.findViewById<TextView>(R.id.caloriesBurnedTV)
         val exerciseTime = view.findViewById<TextView>(R.id.exerciseTimeTV)
+
+
 
         lifecycleScope.launch {
             // Retrieve all necessary values for displaying a user's summary
@@ -71,19 +83,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             val stepsToday = retrieveSteps()
             val exerciseTimeToday = retrieveExerciseTime()
 
-            Log.d("$calorieGoal", "Calorie Goal")
-            Log.d("$proteinGoal", "Protein Goal")
-            Log.d("$carbsGoal", "Carbs Goal")
-            Log.d("$fatGoal", "Fat Goal")
-            Log.d("$stepsGoal", "Steps Goal")
-            Log.d("$caloriesConsumed", "Calories Consumed")
-            Log.d("$caloriesBurned", "Calories Burned")
-            Log.d("$proteinConsumed", "Protein Consumed")
-            Log.d("$carbsConsumed", "Carbs Consumed")
-            Log.d("$fatConsumed", "Fat Consumed")
-            Log.d("$stepsToday", "Steps Today")
-            Log.d("$exerciseTimeToday", "Exercise Time Today")
-
             // Calculate calories, macros, and steps remaining for the day
             val caloriesRemaining = calorieGoal - caloriesConsumed + caloriesBurned
             Log.d("$caloriesRemaining", "Calories Remaining")
@@ -92,30 +91,52 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             val fatRemaining = fatGoal - fatConsumed
 
             // Create percentages for calories, macros, and steps to fill up the progress bars accordingly
-            val percentOfCaloriesComplete = caloriesConsumed / calorieGoal
-            val percentOfProteinComplete = proteinConsumed / proteinGoal
-            val percentOfCarbsComplete = carbsConsumed / carbsGoal
-            val percentOfFatComplete = fatConsumed / fatGoal
-            val percentOfStepsComplete = stepsToday / stepsGoal
+            val percentOfCaloriesComplete = caloriesConsumed.toFloat() / calorieGoal.toFloat() * 100f
+            val percentOfProteinComplete = proteinConsumed.toFloat() / proteinGoal.toFloat() * 100f
+            val percentOfCarbsComplete = carbsConsumed.toFloat() / carbsGoal.toFloat() * 100f
+            val percentOfFatComplete = fatConsumed.toFloat() / fatGoal.toFloat() * 100f
+            val percentOfStepsComplete = stepsToday.toFloat() / stepsGoal.toFloat() * 100f
 
-            // Update the UI
-            caloriesProgressCircle.progress = percentOfCaloriesComplete
+            // Update the text in the UI
             caloriesText.text = caloriesRemaining.toString() + "\nremaining"
-            proteinProgressCircle.progress = percentOfProteinComplete
             proteinText.text = proteinRemaining.toString() + "g\nremaining"
-            carbsProgressCircle.progress = percentOfCarbsComplete
             carbsText.text = carbsRemaining.toString() + "g\nremaining"
-            fatProgressCircle.progress = percentOfFatComplete
             fatText.text = fatRemaining.toString() + "g\nremaining"
-            stepsProgressBar.progress = percentOfStepsComplete
             stepsAmount.text = stepsToday.toString() + "/" + stepsGoal.toString() + " steps"
-
             goalCalories.text = calorieGoal.toString()
             foodCalories.text = caloriesConsumed.toString()
             exerciseCalories.text = caloriesBurned.toString()
-
             exerciseCal.text = caloriesBurned.toString() + " cal"
             exerciseTime.text = exerciseTimeToday.toString()
+
+            // Use a map to map progress bars to their respective percentages.
+            val progressMap = mapOf(
+                caloriesProgressCircle to percentOfCaloriesComplete,
+                proteinProgressCircle to percentOfProteinComplete,
+                carbsProgressCircle to percentOfCarbsComplete,
+                fatProgressCircle to percentOfFatComplete,
+                stepsProgressBar to percentOfStepsComplete
+            )
+            var progressAnimators: List<ObjectAnimator>? = null
+
+            // Animate the progress bars
+            lifecycleScope.launch {
+                progressAnimators?.forEach { it.cancel() }
+
+                for ((progressCircle, percentage) in progressMap) {
+                    val progressAnimator = ObjectAnimator.ofInt(
+                        progressCircle,
+                        "progress",
+                        0,
+                        percentage.toInt()
+                    ).apply {
+                        duration = 750 // Set animation duration
+                        interpolator = FastOutSlowInInterpolator()
+                        start() // Start the animation
+                    }
+                    progressAnimators?.plus(progressAnimator)
+                }
+            }
         }
         return view
     }
@@ -286,6 +307,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             e.printStackTrace()
             0
         }
+    }
+
+    /**
+     * Resets the progress circles to 0 when the fragment comes back into view.
+     */
+    override fun onResume() {
+        super.onResume()
+        caloriesProgressCircle.progress = 0
+        proteinProgressCircle.progress = 0
+        carbsProgressCircle.progress = 0
+        fatProgressCircle.progress = 0
+        stepsProgressBar.progress = 0
     }
 
 }

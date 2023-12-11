@@ -41,6 +41,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/formulaTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Calories = Goal - Food + Exercise"
+                android:textColor="#868686"
+                android:textSize="15sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/caloriesTV" />
+
             <ProgressBar
                 android:id="@+id/caloriesProgress"
                 style="@style/CircularProgressBar"
@@ -51,7 +62,7 @@
                 android:progressDrawable="@drawable/progress_circle"
                 android:rotation="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/caloriesTV" />
+                app:layout_constraintTop_toBottomOf="@id/formulaTV" />
 
             <TextView
                 android:id="@+id/caloriesProgressTV"
@@ -171,7 +182,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.26" />
+                app:layout_constraintGuide_percent="0.34" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline15"
